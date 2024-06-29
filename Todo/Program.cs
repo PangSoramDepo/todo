@@ -12,14 +12,16 @@ app.MapGet("/todos", (TodoDb db) => db.TodoItems.ToList());
 
 app.MapGet("/todos/{id}", (int id, TodoDb db) => db.TodoItems.Find(id));
 
-app.MapPost("/todos", (TodoItem item, TodoDb db) => {
+app.MapPost("/todos", (TodoItem item, TodoDb db) =>
+{
     db.TodoItems.Add(item);
     db.SaveChanges();
-    return Results.Created($"/todosasd/{item.Id}", item);
+    return Results.Created($"/todos/{item.Id}", item);
 });
 
-app.MapPatch("/todos/{id}", (int id, TodoItem item, TodoDb db) => {
-    TodoItem dbItem = db.TodoItems.Find(id);
+app.MapPatch("/todos/{id}", (int id, TodoItem item, TodoDb db) =>
+{
+    TodoItem? dbItem = db.TodoItems.Find(id);
     if (dbItem == null) return Results.NotFound();
     dbItem.Name = item.Name;
     dbItem.IsCompleted = item.IsCompleted;
@@ -27,8 +29,9 @@ app.MapPatch("/todos/{id}", (int id, TodoItem item, TodoDb db) => {
     return Results.NoContent();
 });
 
-app.MapDelete("/todos/{id}", (int id, TodoDb db) => {
-    TodoItem dbItem = db.TodoItems.Find(id);
+app.MapDelete("/todos/{id}", (int id, TodoDb db) =>
+{
+    TodoItem? dbItem = db.TodoItems.Find(id);
     if (dbItem == null) return Results.NotFound();
     db.Remove(dbItem);
     db.SaveChanges();
